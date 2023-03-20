@@ -9,6 +9,7 @@
 name: pypi CI
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 

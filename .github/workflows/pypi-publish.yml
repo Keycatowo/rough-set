@@ -12,12 +12,9 @@ on:
   release:
     types: [published]
 
-permissions:
-  contents: read
 
 jobs:
-  deploy:
-
+  release:
     runs-on: ubuntu-latest
 
     steps:

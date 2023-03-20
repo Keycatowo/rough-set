@@ -1,11 +1,12 @@
 import setuptools
+from roughset import __version__
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="roughset",
-    version="0.1.0",
+    version=__version__,
     author="owo",
     author_email="contact@owomail.cc",
     description="A Python library that provides a set of tools to calculate rough sets and obtain reduct rules.",

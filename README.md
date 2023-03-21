@@ -17,23 +17,30 @@ With a example data
 ![Example data](https://i.imgur.com/AHzxjiu.png)
 
 ```python
-from roughset.reduct import create_reduct_rules
+from roughset import RoughSet
 
 # Load data from a CSV file
 df = pd.read_csv('example.csv')
 
-# Calculate reduct rules
-create_reduct_rules(
+# Create RoughSet object
+RS = RoughSet(
     df=df,
     name_col="No",
     feature_col=['天氣', '事故情形', '事故原因'],
-    decision_col='損壞部位',
-    include_empty=True # Include empty reduct rules
+    decision_col='損壞部位'
 )
+rules = RS.get_reduct_rules(include_empty=True)
+rules
 ```
 We will get the reduct rules.
 ![reduct rules result](https://i.imgur.com/wyG1wUr.png)
 
+
+```python
+rules_with_scores = RS.get_reduct_rules_with_scores()
+rules_with_scores
+```
+![](https://i.imgur.com/UjmomZj.png)
 
 
 ## 🤝 Contribution

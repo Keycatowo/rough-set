@@ -94,7 +94,7 @@ class RoughSet:
         if confidence:
             self.reduct_rules["confidence"] = xy_score / x_score
         if lift:
-            self.reduct_rules["lift"] = xy_score / y_score
+            self.reduct_rules["lift"] = xy_score / x_score / y_score
             
         return self.reduct_rules
         
@@ -128,3 +128,22 @@ class RoughSet:
             raise ValueError("method must be X, Y or XY")
         
 
+    def positive_region(self, condition):
+        # calculate positive region of a condition
+        pass
+    
+    def negative_region(self, condition):
+        # calculate negative region of a condition
+        pass
+    
+    def boundary_region(self, condition):
+        # calculate boundary region of a condition
+        pass
+        
+    def reduct(self, attributes):
+        # calculate the reduct of a set of attributes
+        pass
+        
+    def core(self, attributes):
+        # calculate the core of a set of attributes
+        pass

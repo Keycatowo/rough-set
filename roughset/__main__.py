@@ -3,22 +3,10 @@ import warnings
 
 class RoughSet:
     def __init__(self, data, name_col=None, feature_col=None, decision_col=None):
-        """
-        """
-        # 
         self.df = data
-        if name_col is None:
-            self.name_column = data.columns[0]
-        else:
-            self.name_column = name_col
-        if feature_col is None:
-            self.feature_col = list(data.columns[1:-1])
-        else:
-            self.feature_col = feature_col
-        if decision_col is None:
-            self.decision_col = data.columns[-1]
-        else:
-            self.decision_col = decision_col
+        self.name_column = name_col or data.columns[0]  # 簡化的if/else語法
+        self.feature_col = feature_col or list(data.columns[1:-1])
+        self.decision_col = decision_col or data.columns[-1]
         self.check_roughset_prerequisites()
         
     def check_roughset_prerequisites(self):

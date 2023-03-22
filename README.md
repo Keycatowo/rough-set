@@ -29,7 +29,7 @@ RS = RoughSet(
     feature_col=['天氣', '事故情形', '事故原因'],
     decision_col='損壞部位'
 )
-rules = RS.get_reduct_rules(include_empty=True)
+rules = RS.create_reduct_rules(include_empty=True)
 rules
 ```
 We will get the reduct rules.
@@ -37,7 +37,7 @@ We will get the reduct rules.
 
 
 ```python
-rules_with_scores = RS.get_reduct_rules_with_scores()
+rules_with_scores = RS.evaluate_metrics()
 rules_with_scores
 ```
 ![](https://i.imgur.com/UjmomZj.png)

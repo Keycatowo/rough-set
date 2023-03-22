@@ -15,25 +15,23 @@ class RoughSet:
         feature_col = self.feature_col
         decision_col = self.decision_col
         
-        # name_col 存在於 columns
-        assert name_col in columns, f'物件名稱欄位不存在：{name_col} not in {columns}, '
-        # 所有name_col的值都不重複
+        assert name_col in columns, f'物件名稱欄位不存在：{name_col} not in {columns}'
         assert len(self.df[name_col].unique()) == len(self.df[name_col]), f'決策欄位名稱重複：{name_col} has duplicate values'
-        # feature_col 存在於 columns
         assert all([col in columns for col in feature_col]), f'{feature_col} not in {columns}'
-        # decision_col 存在於 columns
         assert decision_col in columns, f'決策屬性欄位不存在：{decision_col} not in {columns}'
+
     
     def __getitem__(self, index):
-        row = self.df[self.df[self.name_column] == index]
-        assert len(row) == 1, f'物件不存在：{index} not in {self.df[self.name_column]}'
-        text = ""
-        text += f"物件：{row[self.name_column]}\n"
-        text += "-"*20 + "\n"
+        # 將列中的目標物件以字典形式擷取出來，如果條件不符，則拋出異常
+        row = self.df.loc[self.df[self.name_column] == index].squeeze().to_dict()
+        if not row:
+            raise KeyError(f'物件不存在：{index} not in {self.df[self.name_column]}')
+
+        # 將目標物件轉換成較易讀取的格式
+        text = f"物件：{row[self.name_column]}\n{'-'*20}\n"
         for col in self.feature_col:
             text += f"{col}: {row[col]}\n"
-        text += "-"*20 + "\n"
-        text += f"決策屬性：{row[self.decision_col]}\n"
+        text += f"{'-'*20}\n決策屬性：{row[self.decision_col]}\n"
         print(text)
         
         return row

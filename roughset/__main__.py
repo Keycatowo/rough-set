@@ -16,7 +16,7 @@ class RoughSet:
         decision_col = self.decision_col
         
         assert name_col in columns, f'物件名稱欄位不存在：{name_col} not in {columns}'
-        assert len(self.df[name_col].unique()) == len(self.df[name_col]), f'決策欄位名稱重複：{name_col} has duplicate values'
+        assert len(self.df[name_col].unique()) == len(self.df[name_col]), f'物件欄位名稱重複：{name_col} has duplicate values'
         assert all([col in columns for col in feature_col]), f'{feature_col} not in {columns}'
         assert decision_col in columns, f'決策屬性欄位不存在：{decision_col} not in {columns}'
 

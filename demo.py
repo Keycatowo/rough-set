@@ -16,6 +16,7 @@ def convert_df(df):
 
 st.header("Rough Set Demo")
 st.write("This is a demo of the rough set package.")
+st.write("[使用說明](https://github.com/Keycatowo/rough-set/blob/main/docs/streamlit%20demo.md)")
 
 st.subheader("Upload a CSV file")
 file = st.file_uploader("Upload a CSV file", type="csv")
@@ -44,7 +45,7 @@ if st.session_state.submit:
     with col1: support_th = st.number_input("Support Threshold", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
     with col2: confidence_th = st.number_input("Confidence Threshold", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
     with col3: lift_th = st.number_input("Lift Threshold", min_value=0.0, value=0.0, step=0.01)
-    with col4: deduplicate = st.checkbox("Deduplicate", value=True)
+    with col4: deduplicate = st.checkbox("Deduplicate", value=False)
 
     rules_filtered = rules_with_metrics[(rules_with_metrics["support"] >= support_th) & (rules_with_metrics["confidence"] >= confidence_th) & (rules_with_metrics["lift"] >= lift_th)]
     if deduplicate:

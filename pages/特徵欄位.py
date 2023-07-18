@@ -10,23 +10,29 @@ file = st.file_uploader("Upload a CSV file", type="csv")
 if file is not None:
     df = pd.read_csv(file)
     st.write(df)
+    name_col = st.selectbox("物件名稱欄位", list(df.columns), index=0)
+    decision_col = st.selectbox("決策欄位", list(df.columns), index=len(df.columns)-1)
+    feature_cols = st.multiselect("特徵欄位", list(df.columns), default=list(df.columns[1:-1]))
 
-    with st.expander("比較欄位是否獨立"):    
-        col1, col2 = st.columns(2)
+    with st.expander("欄位是否獨立"):    
+        show_set = st.checkbox("顯示對應集合詳細內容", value=False, key="show_detail")
         
-        name_col = st.selectbox("物件名稱欄位", list(df.columns), index=0)
-        decision_col = st.selectbox("決策欄位", list(df.columns), index=len(df.columns)-1)
-        with col1:
-            select_col1 = st.multiselect("比較欄位1", list(df.columns), default=list(df.columns[1:-1]))
-            grouped1 = df.groupby(select_col1)[name_col].apply(list)
-            D1 = list(grouped1.values)
-            st.write(D1)
-        with col2:
-            select_col2 = st.multiselect("比較欄位2", list(df.columns), default=list(df.columns[1:-2]))
-            grouped2 = df.groupby(select_col2)[name_col].apply(list)
-            D2 = list(grouped2.values)
-            st.write(D2)
-        st.write("是否相同:", D1 == D2)    
+        select_col_all = feature_cols
+        grouped_all = df.groupby(select_col_all)[name_col].apply(list)
+        D_all = list(grouped_all.values)
+        st.write(f"屬性集合D(**{select_col_all}**):")
+        if show_set:
+            st.write(D_all)
+        
+        for col_ in feature_cols:
+            st.write(f"#### {col_}")
+            
+            grouped_ = df.groupby(col_)[name_col].apply(list)
+            D_ = list(grouped_.values)
+            if show_set:
+                st.write(f"屬性集合D({col_}):", D_)
+            is_independent = D_ == D_all
+            st.write("是否獨立:", is_independent) 
     
     with st.expander("計算近似空間"):
     

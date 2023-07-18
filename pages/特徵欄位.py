@@ -52,6 +52,7 @@ if file is not None:
                 if [x] in D:
                     lower_set.add(x)
             st.write(lower_set)
+            st.write("數量:", len(lower_set))
         with col4:
             st.write("集合X的上近似集合")
             upper_set = set()
@@ -60,8 +61,10 @@ if file is not None:
                     if x in d:
                         upper_set.update(d)
             st.write(upper_set)
+            st.write("數量:", len(upper_set))
         st.write("界限集合")
         st.write(upper_set - lower_set)
+        st.write("數量:", len(upper_set - lower_set))
             
             
     

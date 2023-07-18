@@ -22,15 +22,15 @@ if file is not None:
         D_all = list(grouped_all.values)
         st.write(f"屬性集合D(**{select_col_all}**):")
         if show_set:
-            st.write(D_all)
+            st.write("{" + ",".join([f"{{{','.join(x)}}}" for x in D_all]) + "}")
         
         for col_ in feature_cols:
-            st.write(f"#### {col_}")
+            st.write(f"#### D - {col_}")
             
             grouped_ = df.groupby(col_)[name_col].apply(list)
             D_ = list(grouped_.values)
             if show_set:
-                st.write(f"屬性集合D({col_}):", D_)
+                st.write("{" + ",".join([f"{{{','.join(x)}}}" for x in D_]) + "}")
             is_independent = D_ == D_all
             st.write("是否獨立:", is_independent) 
     

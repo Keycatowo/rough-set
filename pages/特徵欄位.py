@@ -26,8 +26,9 @@ if file is not None:
         
         for col_ in feature_cols:
             st.write(f"#### D - {col_}")
+            select_col_ = [x for x in feature_cols if x != col_]
             
-            grouped_ = df.groupby(col_)[name_col].apply(list)
+            grouped_ = df.groupby(select_col_)[name_col].apply(list)
             D_ = list(grouped_.values)
             if show_set:
                 st.write("{" + ",".join([f"{{{','.join(x)}}}" for x in D_]) + "}")

@@ -33,7 +33,7 @@ if file is not None:
             if show_set:
                 st.write("{" + ",".join([f"{{{','.join(x)}}}" for x in D_]) + "}")
             is_independent = D_ == D_all
-            st.write("是否獨立:", is_independent) 
+            st.write("獨立:", not is_independent) 
     
     with st.expander("計算近似空間"):
     

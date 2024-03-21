@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# 忽略 macOS 隱藏檔案和資料夾
+/.DS_Store
+**/.DS_Store
+
+# 忽略 Windows 隱藏檔案和資料夾
+Thumbs.db
+desktop.ini

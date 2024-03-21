@@ -1,15 +1,31 @@
 from .reduct import create_reduct_rules
 import warnings
+import pandas as pd
 
 class RoughSet:
-    def __init__(self, data, name_col=None, feature_col=None, decision_col=None):
+    def __init__(self, 
+                 data: pd.DataFrame, 
+                 name_col: str = None, 
+                 feature_col: list[str] = None, 
+                 decision_col: list[str] = None
+                 ):
         self.df = data
-        self.name_column = name_col or data.columns[0]  # 簡化的if/else語法
+        self.name_column = name_col or data.columns[0]  # Simplified if/else syntax
         self.feature_col = feature_col or list(data.columns[1:-1])
         self.decision_col = decision_col or data.columns[-1]
         self.check_roughset_prerequisites()
         
     def check_roughset_prerequisites(self):
+        """
+            檢查物件是否符合RoughSet的前提
+                1. 物件名稱欄位存在
+                2. 物件名稱欄位不重複
+                3. 特徵欄位存在
+                4. 決策屬性欄位存在
+            如果不符合，則拋出異常
+            
+            return: None
+        """
         columns = self.df.columns
         name_col = self.name_column
         feature_col = self.feature_col
@@ -36,9 +52,19 @@ class RoughSet:
         
         return row
 
-    def create_reduct_rules(self, include_empty=False):
+    def create_reduct_rules(self, include_empty=False) -> pd.DataFrame:
         """
             呼叫 reduct.create_reduct_rules 產生規則
+            
+            Parameters:
+                include_empty: bool, default False
+                    是否包含空規則
+                    - True: 包含空規則
+                    - False: 不包含空規則
+                    
+            Returns:
+                reduct_rules: pandas.DataFrame, 規則
+                
         """
         self.reduct_rules = create_reduct_rules(
             df=self.df,
@@ -50,9 +76,20 @@ class RoughSet:
         return self.reduct_rules
     
     
-    def evaluate_metrics(self, support=True, confidence=True, lift=True):
+    def evaluate_metrics(self, support=True, confidence=True, lift=True) -> pd.DataFrame:
         """
-            計算support, confidence, lift。
+            計算 support, confidence, lift
+            
+            Parameters:
+                support: bool, default True
+                    是否計算 support
+                confidence: bool, default True
+                    是否計算 confidence
+                lift: bool, default True
+                    是否計算 lift
+                    
+            Returns:
+                reduct_rules: pandas.DataFrame, 包含 support, confidence, lift 的規則
         """ 
         # 先檢查是否有產生規則
         assert hasattr(self, 'reduct_rules'), '請先產生規則'
@@ -86,9 +123,9 @@ class RoughSet:
         
         
     
-    def calculate_precent(self, target_dict):
+    def calculate_precent(self, target_dict: dict) -> float:
         """
-        計算給定的規則條件佔所有資料的比例
+            計算給定的規則條件佔所有資料的比例
         """
         tmp_df = self.df
         for col in target_dict.keys():
@@ -97,11 +134,22 @@ class RoughSet:
             tmp_df = tmp_df[tmp_df[col] ==target_dict[col]]
         return len(tmp_df) / len(self.df)
 
-    def row2dict(self, row, method="X"):
+    def row2dict(self, row: pd.Series, method="X") -> dict:
         """
-            X: 所有的特徵的集合
-            Y: 決策屬性的集合
-            XY: 特徵+決策屬性的集合
+        將 row 依照設定方法轉換成字典
+
+        Parameters:
+            row: A row from the dataset represented as a dictionary.
+            method (str, ): The method to determine which columns to include in the dictionary.
+                - 'X': Selects only the features.
+                - 'Y': Selects only the decision attribute.
+                - 'XY': Selects both features and the decision attribute.
+        
+        Returns:
+            dict: A dictionary containing selected columns based on the specified method.
+
+        Raises:
+            ValueError: If the method is not one of 'X', 'Y', or 'XY'.
         """
         row_dict = dict(row)
         if method == "X":
@@ -133,3 +181,20 @@ class RoughSet:
     def core(self, attributes):
         # calculate the core of a set of attributes
         pass
+    
+    def __repr__(self) -> str:
+        repr_ = "RoughSet\n\n"
+        
+        repr_ += f"\tName column: {self.name_column}\n"
+        repr_ += f"\tFeature columns: {self.feature_col}\n"
+        repr_ += f"\tDecision column: {self.decision_col}\n\n"
+        
+        repr_ += f"\tNumber of objects: {len(self.df)}\n"
+        repr_ += f"\tNumber of unique decision values: {len(self.df[self.decision_col].unique())}\n"
+        
+        if hasattr(self, 'reduct_rules'):
+            repr_ += f"\tNumber of reduct rules: {len(self.reduct_rules)}\n"
+        else:
+            repr_ += "\tNo reduct rules now, use create_reduct_rules to generate reduct rules\n"
+            
+        return repr_

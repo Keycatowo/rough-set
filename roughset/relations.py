@@ -143,3 +143,19 @@ def get_upper_approximation(df, name_col: str, target_cols: list[str], decision_
                 break
 
     return set(upper_set)
+
+def is_set_same(set1: list[set], set2:list[set]):
+    """
+        檢查兩個set list是否相等
+    """
+    
+    for s1 in set1:
+        if s1 not in set2:
+            return False
+        
+    for s2 in set2:
+        if s2 not in set1:
+            return False
+        
+    return True
+    

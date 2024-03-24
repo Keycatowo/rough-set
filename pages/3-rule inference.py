@@ -91,9 +91,9 @@ if st.session_state["file"] is not None:
         
         st.write("#### Set Threshold")
         col1, col2, col3 = st.columns(3)
-        support_th = col1.number_input("Support Threshold", min_value=0.0, max_value=1.0, value=0.0, help=f"Support Threshold is the minimum support value of the rule. In this case, the minimum support value is `{1/len(df):.4f}`, which means the rule must cover at least one object.")
-        confidence_th = col2.number_input("Confidence Threshold", min_value=0.0, max_value=1.0, value=0.0, help="Confidence Threshold is the minimum confidence value of the rule. Since the rule is reduct from the decision, all rules have a confidence of 1.0.")
-        lift_th = col3.number_input("Lift Threshold", min_value=0.0, value=0.0, help="Lift Threshold is the minimum lift value of the rule. The default value is 0.0.")
+        support_th = col1.number_input("Support Threshold", min_value=0.0, max_value=1.0, value=0.0, step=0.001, help=f"Support Threshold is the minimum support value of the rule. In this case, the minimum support value is `{1/len(df):.4f}`, which means the rule must cover at least one object.")
+        confidence_th = col2.number_input("Confidence Threshold", min_value=0.0, max_value=1.0, value=0.0, step=0.001, help="Confidence Threshold is the minimum confidence value of the rule. Since the rule is reduct from the decision, all rules have a confidence of 1.0.")
+        lift_th = col3.number_input("Lift Threshold", min_value=0.0, value=0.0, step=0.001, help="Lift Threshold is the minimum lift value of the rule. The default value is 0.0.")
         
         rules_filtered = rules_with_metrics[
             (rules_with_metrics["Support"] >= support_th) &

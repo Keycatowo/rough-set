@@ -1,57 +1,67 @@
 import streamlit as st
 import pandas as pd
-from roughset import RoughSet
-
-if 'submit' not in st.session_state:
-    st.session_state['submit'] = False
-
-@st.cache_data
-def convert_df(df):
-    """
-        Convert a pandas dataframe into a csv file.
-        For the download button in streamlit.
-    """
-    return df.to_csv(index=False).encode('utf-8-sig')
 
 
 st.header("Rough Set Demo")
-st.write("This is a demo of the rough set package.")
-st.write("[使用說明](https://github.com/Keycatowo/rough-set/blob/main/docs/streamlit%20demo.md)")
+st.write("This is a demo of package **roughset**.")
 
-st.subheader("Upload a CSV file")
-file = st.file_uploader("Upload a CSV file", type="csv")
-if file is not None:
-    df = pd.read_csv(file)
-    st.write(df)
-    
-    with st.form("確認欄位名稱"):
-        name_col = st.selectbox("物件名稱欄位", list(df.columns), index=0)
-        feature_cols = st.multiselect("特徵欄位", list(df.columns), default=list(df.columns[1:-1]))
-        decision_col = st.selectbox("決策欄位", list(df.columns), index=len(df.columns)-1)
-        submit = st.form_submit_button("計算約略集合規則")
+st.subheader("Stage 0: Prepare Data")
 
-    if submit:
-        st.session_state.submit = True
-    
-if st.session_state.submit:
-    st.subheader("約略集合規則")
-    RS = RoughSet(df, name_col, feature_cols, decision_col)
-    rules = RS.create_reduct_rules()
-    rules_with_metrics = RS.evaluate_metrics()
-    
+st.write("In this stage, you will prepare the data for the rough set analysis.")
+st.write("""
+####  Data requirements:
+- Data should be a `.csv` file.
+- Contains multiple columns
+    - One of the columns should be the object name, default is the first column.
+    - One of the columns should be the decision attribute, default is the last column.
+    - The rest of the columns are the feature attributes.
+""")
+df_exmaple = pd.read_csv("example/Mohapatra/Mohapatra.csv")
+st.write("#### Example Data")
+st.dataframe(df_exmaple, use_container_width=True)
 
-    
-    col1, col2, col3, col4 = st.columns(4)
-    with col1: support_th = st.number_input("Support Threshold", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    with col2: confidence_th = st.number_input("Confidence Threshold", min_value=0.0, max_value=1.0, value=0.0, step=0.01)
-    with col3: lift_th = st.number_input("Lift Threshold", min_value=0.0, value=0.0, step=0.01)
-    with col4: deduplicate = st.checkbox("Deduplicate", value=False)
 
-    rules_filtered = rules_with_metrics[(rules_with_metrics["support"] >= support_th) & (rules_with_metrics["confidence"] >= confidence_th) & (rules_with_metrics["lift"] >= lift_th)]
-    if deduplicate:
-        rules_filtered = rules_filtered.drop(columns=[name_col])
-        rules_filtered = rules_filtered.drop_duplicates()
-    st.dataframe(rules_filtered, use_container_width=True)
-    st.write("Number of rules:", rules_filtered.shape[0])
-    st.download_button("Download", convert_df(rules_filtered), file_name="rules.csv", mime="text/csv")
-    
+st.subheader("Stage 1: Select Feature")
+st.write("In this stage, you can upload the data, and check if the feature is **independent** or **dependent**.")
+st.write("In addition, you can also check the **upper approximation**, **lower approximation**, and **boundary region** of the decision value.")
+st.page_link("pages/1-select feature.py", label="Select Feature", icon="1️⃣")
+
+
+st.subheader("Stage 2: Split Data")
+st.write("In this stage, you can split the data into **training** and **testing** data.")
+st.page_link("pages/2-data process.py", label="Data Process", icon="2️⃣")
+stage2_col1, stage2_col2 = st.columns(2)
+with stage2_col1:
+    st.write("#### Training Data")
+    df_train = pd.read_csv("example/Mohapatra/Mohapatra_train.csv")
+    st.dataframe(df_train, use_container_width=True)
+with stage2_col2:
+    st.write("#### Testing Data")
+    df_test = pd.read_csv("example/Mohapatra/Mohapatra_test.csv")
+    st.dataframe(df_test, use_container_width=True)
+
+
+
+st.subheader("Stage 3: Rough Set Analysis")
+st.write("In this stage, you can get the **reduct rules** from the training data.")
+st.write("In addition, you can also set the **threshold** for reduct rules, and download the **filtered rules**.")
+st.page_link("pages/3-rule inference.py", label="Rough Set Analysis", icon="3️⃣")
+
+st.write("#### Example Rules")
+df_rules = pd.read_csv("example/Mohapatra/Mohapatra_train_rules.csv")
+st.dataframe(df_rules, use_container_width=True)
+
+st.write("#### Example Rules with metrics")
+df_rules_metrics = pd.read_csv("example/Mohapatra/Mohapatra_train_rules_with_metrics.csv")
+df_rules_metrics.drop(columns=["__rules_dict", "__metrics"], inplace=True)
+st.dataframe(df_rules_metrics, use_container_width=True)
+
+
+st.subheader("Stage 4: Evaluation")
+st.write("In this stage, you can evaluate the rulee with the testing data.")
+st.write("You can get the **Support**, **Confidence**, **Lift** of the rules.")
+st.page_link("pages/4-rule application.py", label="Evaluation", icon="4️⃣")
+st.write("#### Example Evaluation")
+df_eval = pd.read_csv("example/Mohapatra/Mohapatra_train__rules_with_test_metrics.csv")
+df_eval.drop(columns=["__rules_dict", "__metrics"], inplace=True)
+st.dataframe(df_eval, use_container_width=True)

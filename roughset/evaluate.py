@@ -45,7 +45,7 @@ def evaluate_metrics(target_dict, df_data, name_col, feature_col, decision_col) 
         
         metrics = {
             "support": x_score,
-            "confidence": xy_score / x_score,
-            "lift": xy_score / x_score / y_score
+            "confidence": xy_score / x_score if x_score != 0 else None,
+            "lift": xy_score / (x_score * y_score) if x_score != 0 and y_score != 0 else None
         }
         return metrics

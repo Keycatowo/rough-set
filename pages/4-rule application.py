@@ -47,8 +47,6 @@ if file_rule and file_data:
     with tab2:
         
         rules_with_metrics = df_rule.copy()
-        # 將 nan 填入 None
-        rules_with_metrics = rules_with_metrics.where(pd.notnull(rules_with_metrics), None)
         
         
         rules_with_metrics["__rules_dict"] = rules_with_metrics.apply(lambda x: row2dict(x, feature_cols + [decision_col]), axis=1)

@@ -24,7 +24,13 @@ def row2dict(row, target_cols):
     """
         將row轉換成dict, 只取target_cols
     """
-    return {col: row[col] for col in target_cols}
+    retr_dict = {col: row[col] for col in target_cols}
+    
+    # change values fron nan to None
+    for key, value in retr_dict.items():
+        if pd.isna(value):
+            retr_dict[key] = None
+    return retr_dict
 
 def evaluate_metrics(target_dict, df_data, name_col, feature_col, decision_col) -> dict:
         """

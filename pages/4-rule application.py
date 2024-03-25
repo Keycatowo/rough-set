@@ -38,8 +38,11 @@ if file_data:
 if file_rule and file_data:
     with tab1:
         name_col = st.selectbox("Object Name", list(df_data.columns), index=0, help="Select the column that contains the object names.\nDefault is the first column.")
-        decision_col = st.selectbox("Decision", list(df_data.columns), index=len(df_data.columns)-1, help="Select the column that contains the dicision attribute.\nDefault is the last column.")
-        feature_cols = st.multiselect("Features", list(df_data.columns), default=list(df_data.columns[1:-1]), help="Select the columns that contain the features.\nDefault is all columns except the first and last columns.")
+        decision_col = st.selectbox("Decision", list(df_rule.columns), index=len(df_rule.columns)-1, help="Select the column that contains the dicision attribute.\nDefault is the last column.")
+        feature_cols = st.multiselect("Features", list(df_rule.columns), default=list(df_rule.columns[1:-1]), help="Select the columns that contain the features.\nDefault is all columns except the first and last columns.")
+        
+        df_rule = df_rule[feature_cols + [decision_col]]
+        df_data = df_data[[name_col] + feature_cols + [decision_col]]
     
     with tab2:
         

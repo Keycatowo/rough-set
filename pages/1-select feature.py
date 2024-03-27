@@ -61,7 +61,7 @@ if st.session_state["file"] is not None:
         X = df.groupby(decision_col)[name_col].apply(list)[X_value]
         X = sorted(list(X))
         X_text = "{" + ", ".join([str(x) for x in X]) + "}"
-        st.write("Objects in $X$:")
+        st.write(f"Objects in $X$: \t(`{len(X)}` objects)")
         st.code(X_text)
         # st.write("**U**: `{"+ ", ".join([str(x) for x in df[name_col].to_list()]) + "}`")
         st.write("**F**: `{"+ ", ".join([str(x) for x in feature_cols]) + "}`")
